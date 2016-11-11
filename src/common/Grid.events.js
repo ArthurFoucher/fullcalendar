@@ -220,6 +220,7 @@ Grid.mixin({
 		this.bindSegHandlerToEl(el, 'mouseleave', this.handleSegMouseout);
 		this.bindSegHandlerToEl(el, 'mousedown', this.handleSegMousedown);
 		this.bindSegHandlerToEl(el, 'click', this.handleSegClick);
+		this.bindSegHandlerToEl(el, 'contextmenu', this.handleSegContextmenu);
 	},
 
 
@@ -236,6 +237,14 @@ Grid.mixin({
 				return handler.call(_this, seg, ev); // context will be the Grid
 			}
 		});
+	},
+
+
+	handleSegContextmenu: function(seg, ev) {
+		var res = this.view.trigger('eventContextmenu', seg.el[0], seg.event, ev); // can return `false` to cancel
+		if (res === false) {
+			ev.preventDefault();
+		}
 	},
 
 
@@ -279,6 +288,9 @@ Grid.mixin({
 
 
 	handleSegMousedown: function(seg, ev) {
+		if (ev.button === 2) {
+			return
+		}
 		var isResizing = this.startSegResize(seg, ev, { distance: 5 });
 
 		if (!isResizing && this.view.isEventDraggable(seg.event)) {
@@ -376,7 +388,8 @@ Grid.mixin({
 					parentEl: view.el,
 					opacity: dragListener.isTouch ? null : view.opt('dragOpacity'),
 					revertDuration: view.opt('dragRevertDuration'),
-					zIndex: 2 // one above the .fc-view
+					zIndex: 2, // one above the .fc-view
+					event: ev
 				});
 				mouseFollower.hide(); // don't show until we know this is a real drag
 				mouseFollower.start(ev);

@@ -24,6 +24,7 @@ $.fn.fullCalendar = function(options) {
 				}
 				if (options === 'destroy') { // for the destroy method, must remove Calendar object data
 					element.removeData('fullCalendar');
+					eventGUID = 1
 				}
 			}
 		}
@@ -34,7 +35,7 @@ $.fn.fullCalendar = function(options) {
 			calendar.render();
 		}
 	});
-	
+
 	return res;
 };
 

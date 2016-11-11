@@ -26,10 +26,13 @@ var MouseFollower = Class.extend(ListenerMixin, {
 	isHidden: false,
 	isAnimating: false, // doing the revert animation?
 
+	jsEvent: null,
+
 	constructor: function(sourceEl, options) {
 		this.options = options = options || {};
 		this.sourceEl = sourceEl;
 		this.parentEl = options.parentEl ? $(options.parentEl) : sourceEl.parent(); // default to sourceEl's parent
+		this.jsEvent = options.event;
 	},
 
 
@@ -121,6 +124,11 @@ var MouseFollower = Class.extend(ListenerMixin, {
 			el.addClass('fc-unselectable');
 
 			el.appendTo(this.parentEl);
+			el.draggable();
+			e = this.jsEvent;
+	    e.type = "mousedown.draggable";
+	    e.target = el[0];
+	    el.trigger(e);
 		}
 
 		return el;

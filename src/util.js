@@ -57,7 +57,7 @@ function enableCursor() {
 
 // Given a total available height to fill, have `els` (essentially child rows) expand to accomodate.
 // By default, all elements that are shorter than the recommended height are expanded uniformly, not considering
-// any other els that are already too tall. if `shouldRedistribute` is on, it considers these tall rows and 
+// any other els that are already too tall. if `shouldRedistribute` is on, it considers these tall rows and
 // reduces the available height.
 function distributeHeight(els, availableHeight, shouldRedistribute) {
 
@@ -476,7 +476,7 @@ function compareByFieldSpecs(obj1, obj2, fieldSpecs) {
 
 function compareByFieldSpec(obj1, obj2, fieldSpec) {
 	if (fieldSpec.func) {
-		return fieldSpec.func(obj1, obj2);
+		return flexibleCompare(fieldSpec.func(obj1.task), fieldSpec.func(obj2.task));
 	}
 	return flexibleCompare(obj1[fieldSpec.field], obj2[fieldSpec.field]) *
 		(fieldSpec.order || 1);
