@@ -8,3 +8,12 @@ A full-sized drag & drop event calendar (jQuery plugin).
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 - [License](LICENSE.txt)
+
+# Setup and Build
+```
+npm install
+```
+then
+```
+gulp
+```
