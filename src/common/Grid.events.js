@@ -369,6 +369,7 @@ Grid.mixin({
 		var isDragging;
 		var mouseFollower; // A clone of the original element that will move with the mouse
 		var dropLocation; // zoned event date properties
+		var path;
 
 		if (this.segDragListener) {
 			return this.segDragListener;
@@ -403,6 +404,7 @@ Grid.mixin({
 				_this.handleSegMouseout(seg, ev); // ensure a mouseout on the manipulated event has been reported
 				_this.segDragStart(seg, ev);
 				view.hideEvent(event); // hide all event segments. our mouseFollower will take over
+				path = 1
 			},
 			hitOver: function(hit, isOrig, origHit) {
 				var dragHelperEls;
@@ -441,14 +443,23 @@ Grid.mixin({
 				if (isOrig) {
 					dropLocation = null; // needs to have moved hits to be a valid drop
 				}
+				if (path === 3) {
+					path = 4;
+				}
 			},
 			hitOut: function() { // called before mouse moves to a different hit OR moved out of all hits
 				view.unrenderDrag(); // unrender whatever was done in renderDrag
 				mouseFollower.show(); // show in case we are moving out of all hits
 				dropLocation = null;
+				if (path === 1) {
+					path = 2;
+				}
 			},
 			hitDone: function() { // Called after a hitOut OR before a dragEnd
 				enableCursor();
+				if (path === 1 || path === 2) {
+					path = 3;
+				}
 			},
 			interactionEnd: function(ev) {
 				delete seg.component; // prevent side effects
@@ -462,6 +473,9 @@ Grid.mixin({
 					}
 					if (dropLocation) {
 						view.reportEventDrop(event, dropLocation, this.largeUnit, el, ev);
+					}
+					if (path === 3) {
+						view.trigger('eventDragCancelled', seg.el[0], seg.event, ev, {}); // last argument is jqui dummy
 					}
 				});
 				_this.segDragListener = null;
